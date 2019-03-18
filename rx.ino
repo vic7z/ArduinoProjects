@@ -92,7 +92,7 @@ analogWrite(ya,data.yaw);
 analogWrite(pit,data.pitch);
 analogWrite(rl,data.roll);
 
-throttle = map(data.throttle,0,255,0,180);
+throttle = map(data.throttle,0,255,70,180);
 ESC.write(throttle);
 Serial.println(throttle);
 
