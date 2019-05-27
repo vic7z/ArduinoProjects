@@ -50,20 +50,20 @@ void setup()
   oled.begin(&Adafruit128x64, I2C_ADDRESS);
   oled.setFont(System5x7);
   oled.clear();
-  oled.set2X();
-  oled.println("initializing...");
-  delay(2000);
-  oled.println("");
-  oled.println("");
   oled.set1X();
-  oled.println("\t\t @victor_gpz");
+  oled.println("initializing...");
+  
+  oled.println("");
+  
+  oled.println("@victor_gpz");
+  delay(2000);
   resetData();
   oled.clear();
 
 
-  oled.println("ADC0: 9999 ADC1: 9999");
-  oled.println("ADC2: 9999 ADC3: 9999");
-  oled.println("ADC4: 9999 ADC5: 9999");
+  oled.println("throt: 255 yaw : 255");
+  oled.println("pitch: 255 roll: 255");
+  oled.println("Aux 1: 255 Aux2: 255");
   
     
   col[0] = oled.fieldWidth(strlen("ADC0: "));
@@ -99,9 +99,29 @@ void loop()
   radio.write(&data, sizeof(MyData));
 
   
-  for (uint8_t i = 0; i < 6; i++) {  
-    oled.clearField(col[i%2], rows*(i/2), 4);    
-    oled.print(analogRead(i));
-  }
+  
+    oled.clearField(col[0%2], rows*(0/2), 4);    
+    oled.print(data.throttle);
+
+    oled.clearField(col[1%2], rows*(1/2), 4);    
+    oled.print(data.yaw);
+
+    oled.println();
+
+    oled.clearField(col[2%2], rows*(2/2), 4);    
+    oled.print(data.pitch);
+
+    oled.clearField(col[3%2], rows*(3/2), 4);    
+    oled.print(data.roll);
+
+    oled.println();
+
+    oled.clearField(col[4%2], rows*(4/2), 4);    
+    oled.print(data.AUX1);
+
+    oled.clearField(col[5%2], rows*(5/2), 4);    
+    oled.print(data.AUX2);
+     
+    
   
 }
