@@ -94,6 +94,7 @@ analogWrite(rl,data.roll);
 
 throttle = map(data.throttle,0,255,0,180);
 ESC.write(throttle);
+//no idea ,but the bldc stops @ 160
 Serial.println(throttle);
 
 
