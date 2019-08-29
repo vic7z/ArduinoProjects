@@ -49,6 +49,12 @@ void setup()
   radio.openWritingPipe(pipeOut);
   oled.begin(&Adafruit128x64, I2C_ADDRESS);
   oled.setFont(System5x7);
+PinMode(A0,INPUT);
+PinMode(A1,INPUT);
+PinMode(A2,INPUT);
+PinMode(A3,INPUT);
+PinMode(9, INPUT);
+PinMode(10,INPUT);
   oled.clear();
   oled.set1X();
   oled.println("initializing...");
@@ -76,23 +82,24 @@ void setup()
 
 
 
-int mapJoystickValues(int val, int lower, int middle, int upper, bool reverse)
-{
-  val = constrain(val, lower, upper);
-  if ( val < middle )
-    val = map(val, lower, middle, 0, 128);
-  else
-    val = map(val, middle, upper, 128, 255);
-  return ( reverse ? 255 - val : val );
-}
+//int mapJoystickValues(int val, int lower, int middle, int upper, bool reverse)
+//{
+  //val = constrain(val, lower, upper);
+//  if ( val < middle )
+//    val = map(val, lower, middle, 0, 128);
+//  else
+//    val = map(val, middle, upper, 128, 255);
+//  return ( reverse ? 255 - val : val );
+//}
+
 
 void loop()
 { 
  
-  data.throttle = mapJoystickValues( analogRead(A0), 13, 524, 1015, true );
-  data.yaw      = mapJoystickValues( analogRead(A1),  1, 505, 1020, true );
-  data.pitch    = mapJoystickValues( analogRead(A2), 12, 544, 1021, true );
-  data.roll     = mapJoystickValues( analogRead(A3), 34, 522, 1020, true );
+  data.throttle = map( analogRead(A0), 0, 1024, 0, 255 );
+  data.yaw      = map( analogRead(A1),  0, 1024, 0, 255 );
+  data.pitch    = map( analogRead(A2), 0, 1024, 0, 255 );
+  data.roll     = map( analogRead(A3), 0, 1024, 0, 255 );
   data.AUX1     = digitalRead(9);
   data.AUX2     = digitalRead(10);
 
