@@ -90,22 +90,14 @@ void setup()
 
 
 
-//int mapJoystickValues(int val, int lower, int middle, int upper, bool reverse)
-//{
-  //val = constrain(val, lower, upper);
-//  if ( val < middle )
-//    val = map(val, lower, middle, 0, 128);
-//  else
-//    val = map(val, middle, upper, 128, 255);
-//  return ( reverse ? 255 - val : val );
-//}
+
 
 
 void loop()
 { 
  
  float value = analogRead(voltage);
- float vo  = value/1023 * 5.0;
+ float vo  = value / 67.331;
   data.throttle = map( analogRead(j1x), 0, 1023, 0, 255 );
   data.yaw      = map( analogRead(j1y),  0, 1023, 0, 255 );
   data.pitch    = map( analogRead(j2x), 0, 1023, 0, 255 );
