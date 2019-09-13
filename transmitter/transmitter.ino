@@ -142,7 +142,7 @@ oled.println();
     oled.print("throttle :");
     oled.print(per);
       oled.print(" %");
-  
+  /*
     if(data.AUX1 == 0 && data.AUX2 == 0){
   oled.println();
     oled.print("mode     :forward ");
@@ -151,5 +151,5 @@ if(data.AUX1 == 1 && data.AUX2 == 0){
   oled.println();
     oled.print("mode     :reverse");
   }
-    
+    */
 }
