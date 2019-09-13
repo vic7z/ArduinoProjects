@@ -5,7 +5,13 @@
 #include "SSD1306Ascii.h"
 #include "SSD1306AsciiWire.h"
 #define I2C_ADDRESS 0x3C
-
+#define j1x A0
+#define j1y A1
+#define j1b 9
+#define j2x A2
+#define j2y A3
+#define j2b 3
+#define voltage A7
 const uint64_t pipeOut = 0xE8E8F0F0E1LL;
 
 SSD1306AsciiWire oled;
@@ -49,20 +55,22 @@ void setup()
   radio.openWritingPipe(pipeOut);
   oled.begin(&Adafruit128x64, I2C_ADDRESS);
   oled.setFont(System5x7);
-PinMode(A0,INPUT);
-PinMode(A1,INPUT);
-PinMode(A2,INPUT);
-PinMode(A3,INPUT);
-PinMode(9, INPUT);
-PinMode(10,INPUT);
+  pinMode(j1x,INPUT);
+  pinMode(voltage,INPUT);
+  pinMode(j2x,INPUT);
+  pinMode(j1b,INPUT_PULLUP);
+  pinMode(j1y,INPUT);
+  pinMode(j2y, INPUT);
+  pinMode(j2b,INPUT_PULLUP);
   oled.clear();
-  oled.set1X();
+   oled.set1X();
   oled.println("initializing...");
   
   oled.println("");
   
   oled.println("@victor_gpz");
   delay(2000);
+  
   resetData();
   oled.clear();
 
@@ -76,7 +84,7 @@ PinMode(10,INPUT);
   col[1] = oled.fieldWidth(strlen("ADC0: 9999 ADC1: "));
   rows = oled.fontRows();
   delay(3000);
-  
+ 
 }
 
 
@@ -96,15 +104,18 @@ PinMode(10,INPUT);
 void loop()
 { 
  
-  data.throttle = map( analogRead(A0), 0, 1024, 0, 255 );
-  data.yaw      = map( analogRead(A1),  0, 1024, 0, 255 );
-  data.pitch    = map( analogRead(A2), 0, 1024, 0, 255 );
-  data.roll     = map( analogRead(A3), 0, 1024, 0, 255 );
-  data.AUX1     = digitalRead(9);
-  data.AUX2     = digitalRead(10);
+ float value = analogRead(voltage);
+ float vo  = value/1023 * 5.0;
+  data.throttle = map( analogRead(j1x), 0, 1023, 0, 255 );
+  data.yaw      = map( analogRead(j1y),  0, 1023, 0, 255 );
+  data.pitch    = map( analogRead(j2x), 0, 1023, 0, 255 );
+  data.roll     = map( analogRead(j2y), 0, 1023, 0, 255 );
+  data.AUX1     = digitalRead(j1b);
+  data.AUX2     = digitalRead(j2b);
 
   radio.write(&data, sizeof(MyData));
 
+ int per = map(data.throttle, 0, 255, 0, 100);
   
   
     oled.clearField(col[0%2], rows*(0/2), 4);    
@@ -128,7 +139,25 @@ void loop()
 
     oled.clearField(col[5%2], rows*(5/2), 4);    
     oled.print(data.AUX2);
-     
-    
+
   
+  oled.println();
+    oled.println();
+    oled.print("voltage  :");
+    oled.print(vo);
+    oled.print("v");
+oled.println();
+    oled.print("throttle :");
+    oled.print(per);
+      oled.print(" %");
+  
+    if(data.AUX1 == 0 && data.AUX2 == 0){
+  oled.println();
+    oled.print("mode     :forward ");
+  }
+if(data.AUX1 == 1 && data.AUX2 == 0){
+  oled.println();
+    oled.print("mode     :reverse");
+  }
+    
 }
