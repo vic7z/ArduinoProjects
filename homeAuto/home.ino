@@ -1,10 +1,7 @@
 #define BLYNK_PRINT Serial
-#define BLYNK_PRINT Serial
-#define DHTPIN 0          
-#define DHTTYPE DHT11     
+#define BLYNK_PRINT Serial
 #define motor 4
-#define fan 12
-#define sens 5-
+#define fan 12
 
 #define soil_moisture A0
 #define ser 14
