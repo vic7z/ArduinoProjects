@@ -96,7 +96,7 @@ void eepromwrit(){
 
         for (int i = 0; i < resourse.length(); ++i)
         {
-          EEPROM.write(32 + i, resourse[i]);
+          EEPROM.write(96 + i, resourse[i]);
           Serial.print("Wrote: ");
           Serial.println(resourse[i]);
         }
