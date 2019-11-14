@@ -8,43 +8,6 @@ const char* password = "88888888";
 const char* resource = "/trigger/wifibutton/with/key/bUKA7qhASl1gyf_7OAYvTa8Tpj5ouZZbhK3Lq-o_Xsi";
 
 
-
-
-const char MAIN_page[] PROGMEM = R"=====(
-<!DOCTYPE html>
-
-<html>
-
-<body>
- 
-<h2> Form for ESP8266 </h2>
-
-
-<form action="/action">
-<br>
-<pre>
-SSID     : <input type="text" name="ssid" maxlength="32">
-<br>
-Password : <input type="password" name="passwd" maxlength="32">
-<br>
-Resource : <input type="text" name="res" maxlength="200">
-<br>
-	<input type="submit" value="Submit">
-</pre>
-
-</form>
-
-</body>
-
-</html>
-)=====";
-
-
-
-
-
-
-
 const char* server = "maker.ifttt.com";
 
 void setup() {
