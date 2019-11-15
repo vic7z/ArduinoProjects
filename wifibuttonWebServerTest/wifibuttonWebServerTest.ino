@@ -21,7 +21,7 @@ SSID     : <input type="text" name="ssid" maxlength="32">
 <br>
 Password : <input type="password" name="passwd" maxlength="32">
 <br>
-Resource : <input type="text" name="res" maxlength="200">
+Resource : <input type="text" name="res" maxlength="100">
 <br>
 	<input type="submit" value="Submit">
 </pre>
@@ -33,7 +33,8 @@ Resource : <input type="text" name="res" maxlength="200">
 </html>
 )=====";
 
-
+const char* ssidap = "wifibutton";
+const char* passap = "wifibuttontest";
 
 String qsid = "";
 String qpass = "";
@@ -42,9 +43,9 @@ String resourse = "";
 void eepromwrit(void);
 void webserver(void);
 
-const char* server = "maker.iftt.com";
+const char* serverre = "maker.iftt.com";
 
-ESP8266WebServer server(69);
+ESP8266WebServer server(80);
 
 void setup(){
   
@@ -78,16 +79,27 @@ void setup(){
   
 
   WiFi.begin(esid.c_str(), epass.c_str());
+  
+  if(testWifi()){
+    Serial.println("sucessfully connected");
+    return;
+  }
+  else{
+    Serial.print("turning on hotspot");
+    webserver();
+  }
     
-  int timeout = 10 * 4; // 10 seconds
+  int timeout = 60 * 4; // 10 seconds
 
   while(WiFi.status() != WL_CONNECTED  && (timeout-- > 0)) {
     delay(250);
     Serial.println(".");
+    server.handleClient();
+
   }
 
    if(WiFi.status() != WL_CONNECTED) {
-
+       Serial.println("not connected");
    }
      else{
        Serial.println("connected");
@@ -100,7 +112,7 @@ void setup(){
 }
 
   
-  void loop(){
+void loop(){
   
     }
 
@@ -135,13 +147,66 @@ void eepromwrit(){
 
 
         EEPROM.commit();
+        delay(150);
+        ESP.reset();
 
 }
 
 
 void webserver(){
   WiFi.disconnect();
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP(ssidap,passap);
+  IPAddress IP = WiFi.softAPIP();
   Serial.println("disconnect from the WiFi ");
   delay(10);
+  Serial.print("Local IP: ");
+  Serial.println(IP);
+  
+server.on("/",root);
+server.on("/action",handlepage);
+server.begin();
+Serial.println("server started");
   
 }
+
+
+
+bool testWifi(void)
+{
+  int c = 0;
+  Serial.println("Waiting for Wifi to connect");
+  while ( c < 20 ) {
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      return true;
+    }
+    delay(500);
+    Serial.print("*");
+    c++;
+  }
+  Serial.println("");
+  Serial.println("Connect timed out, opening AP");
+  return false;
+}
+
+
+
+void handlepage(){
+qsid = server.arg("ssid");
+qpass = server.arg("passwd");
+resourse = server.arg("res");
+Serial.println("data from the web");
+
+Serial.println(qsid);
+Serial.println(qpass);
+Serial.println(resourse);
+
+eepromwrit();
+}
+
+
+void root(){
+    String page = MAIN_page;
+    server.send(200,"text/html",page);
+  }
