@@ -3,6 +3,7 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WebServer.h>
 
+//Web page from esp8266
 
 const char MAIN_page[] PROGMEM = R"=====(
 <!DOCTYPE html>
@@ -52,6 +53,9 @@ void setup(){
   Serial.begin(9600);
   EEPROM.begin(512);
 
+
+//Reading the saved ssid
+
   String esid = "";
   for (int i = 0; i < 32; ++i)
   {
@@ -61,8 +65,10 @@ void setup(){
   Serial.println();
   Serial.print("SSID: ");
   Serial.println(esid);
-  Serial.println("Reading EEPROM pass");
 
+//Reading the saved password
+
+  Serial.println("Reading EEPROM pass");
   String epass = "";
   for (int i = 32; i < 96; ++i)
   {
@@ -78,7 +84,7 @@ void setup(){
   }
   
 
-  WiFi.begin(esid.c_str(), epass.c_str());
+  WiFi.begin(esid.c_str(), epass.c_str());.   // Connecting to the wifi
   
   if(testWifi()){
     Serial.println("sucessfully connected");
@@ -91,12 +97,16 @@ void setup(){
     
   int timeout = 60 * 4; // 10 seconds
 
+// Running the web page until establishing a connection
+
   while(WiFi.status() != WL_CONNECTED  && (timeout-- > 0)) {
     delay(250);
     Serial.println(".");
     server.handleClient();
 
   }
+
+//Wifi details
 
    if(WiFi.status() != WL_CONNECTED) {
        Serial.println("not connected");
@@ -110,12 +120,13 @@ void setup(){
 
 
 }
-
+// Nothing on void loop()
   
 void loop(){
   
     }
 
+// Writing data to the esps eeprom
 
 void eepromwrit(){
 
@@ -148,12 +159,15 @@ void eepromwrit(){
 
         EEPROM.commit();
         delay(150);
-        ESP.reset();
-
+        ESP.reset();  //resetting the esp after writing the credentials  and triggers the iftt
 }
 
 
+
+//Turning on the web server
+
 void webserver(){
+
   WiFi.disconnect();
   WiFi.mode(WIFI_AP);
   WiFi.softAP(ssidap,passap);
@@ -171,6 +185,7 @@ Serial.println("server started");
 }
 
 
+//Checking the wifi connection
 
 bool testWifi(void)
 {
@@ -190,9 +205,10 @@ bool testWifi(void)
   return false;
 }
 
-
+//Web page handler
 
 void handlepage(){
+
 qsid = server.arg("ssid");
 qpass = server.arg("passwd");
 resourse = server.arg("res");
