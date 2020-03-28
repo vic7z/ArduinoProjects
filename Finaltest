@@ -1,0 +1,165 @@
+#include <ESP8266WiFi.h>
+#include <EEPROM.h>
+#include <ESP8266HTTPClient.h>
+#include <ESP8266WebServer.h>
+#include <BlynkSimpleEsp8266.h>
+#include <ArduinoJson.h>
+#include <GSMSim.h>
+
+#define RX 7
+#define TX 8
+#define RESET 2
+#define BAUD 9600
+#define BLYNK_PRINT Serial
+
+GSMSim gsm;
+
+const char MAIN_page[] PROGMEM = R"=====(
+<!DOCTYPE html>
+
+<html>
+
+<body>
+ 
+<h2>SoS </h2>
+
+
+<form action="/action">
+<pre>
+Patient Name   : <input type="text" name="pname" maxlength="32">
+<br>
+Patient Age    : <input type="text" name="age" maxlength="2">
+<br>
+SSID           : <input type="text" name="ssid" maxlength="32">
+<br>
+Password       : <input type="password" name="passwd" maxlength="32">
+<br>
+Duty Doctor    : <input type="tel" id="phone" name="dutyphone"
+pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
+required>
+<br>
+Concern Doctor : <input type="tel" id="phone" name="conphone"
+pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
+required>
+<br>
+By-Stander     : <input type="tel" id="phone" name="byphone"
+pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
+required>
+<br>
+
+<input type="submit" value="Submit">
+</pre>
+
+</form>
+
+</body>
+
+</html>
+)=====";
+
+
+char auth[] = "YourAuthToken";
+char esid[] = "";
+char epass[]= "";
+
+const char* avgheart;
+const char* oxystat;
+
+
+char* qsid = "";
+char* qpass = "";
+char* pname ="";
+char* page ="";
+char* conphone ="";
+char* dutyphone="";
+char* byphone="";
+
+
+ESP8266WebServer server(80);
+
+const size_t capacity = JSON_OBJECT_SIZE(3) + JSON_ARRAY_SIZE(2) + 60;
+DynamicJsonDocument doc(capacity);
+
+void handleRoot() {
+ String s = MAIN_page; 
+ server.send(200, "text/html", s);
+}
+
+void handleForm() {
+
+qsid = server.arg("ssid");
+qpass = server.arg("passwd");
+pname = server.arg("pname");
+page = server.arg("age");
+conphone =server.arg("conphone");
+dutyphone =server.arg("dutyphone");
+byphone = server.arg("byphone");
+wifipage =true;
+
+Serial.println("data from the web");
+
+Serial.println(qsid);
+Serial.println(qpass);
+Serial.println(pname);
+Serial.println(page);
+Serial.println(conphone);
+Serial.println(dutyphone);
+Serial.println(byphone);
+
+String s = "<a href='/'> Go Back </a>";
+server.send(200, "text/html", s); 
+}
+
+
+void setup(){
+  Serial.begin(9600);
+  
+  WiFi.begin(esid,epass);     
+  Serial.println("");
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Blynk.begin(auth,esid,epass);
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println("WiFi");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());  
+ 
+  server.on("/", handleRoot);      
+  server.on("/action_page", handleForm); 
+
+  server.begin();
+  Serial.println("HTTP server started");
+
+  while(!wifipage){
+      server.handleClient();
+  }
+}
+
+
+void loop(){
+    Blynk.run();
+
+BLYNK_WRITE(V1)
+{
+  f = param.asInt();
+}
+        Blynk.virtualWrite(V5,avgheart);
+    Blynk.virtualWrite(V6,oxystat);
+
+    if(page.toInt()>18){
+        Serial.println("kid");
+        iskid=0;
+    }else{
+        iskid=1;
+        Serial.println("adult");
+    }
+   calcuheart(atoi(avgheart),iskid);
+    }
+    http.end();
+    delay(1000);
+}
+
