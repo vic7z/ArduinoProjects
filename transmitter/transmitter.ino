@@ -4,6 +4,7 @@
 #include <Wire.h>
 #include "SSD1306Ascii.h"
 #include "SSD1306AsciiWire.h"
+
 #define I2C_ADDRESS 0x3C
 #define j1x A0
 #define j1y A1
@@ -20,7 +21,7 @@ RF24 radio(7,8);
  
 uint8_t col[2];
 uint8_t rows;
-
+String state;
 
 struct MyData {
   byte throttle;
@@ -97,7 +98,9 @@ void loop()
 { 
  
  float value = analogRead(voltage);
- float vo  = value / 67.331;
+ float vo  = value /1023*5;
+ 
+
   data.throttle = map( analogRead(j1x), 0, 1023, 0, 255 );
   data.yaw      = map( analogRead(j1y),  0, 1023, 0, 255 );
   data.pitch    = map( analogRead(j2x), 0, 1023, 0, 255 );
@@ -133,23 +136,25 @@ void loop()
     oled.print(data.AUX2);
 
   
-  oled.println();
+    oled.println();
     oled.println();
     oled.print("voltage  :");
     oled.print(vo);
     oled.print("v");
-oled.println();
-    oled.print("throttle :");
+    oled.println();
+    oled.print("throttle :" );
     oled.print(per);
-      oled.print(" %");
-  /*
-    if(data.AUX1 == 0 && data.AUX2 == 0){
-  oled.println();
-    oled.print("mode     :forward ");
-  }
-if(data.AUX1 == 1 && data.AUX2 == 0){
-  oled.println();
-    oled.print("mode     :reverse");
-  }
-    */
+    oled.println(" %");
+     if(data.throttle==0 && data.pitch==0){
+         state="armed   ";
+         
+    }
+
+    if(data.throttle==0 && data.pitch==0 && data.yaw==0 && data.roll==0){
+      state="disarmed";
+    }
+    oled.print("motor :");
+    oled.println(state);
+
+    
 }
