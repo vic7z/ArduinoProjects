@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/vic/Downloads/arduino-1.8.13/tools/**",
+                "/home/vic/Downloads/arduino-1.8.13/hardware/arduino/avr/**",
+                "/home/vic/Downloads/arduino-1.8.13/libraries/**",
+                "/home/vic/Downloads/arduino-1.8.13/hardware/arduino/avr/libraries/**",
+                "/home/vic/Downloads/arduino-1.8.13/**"
+            ],
+            "forcedInclude": [
+                "/home/vic/Downloads/arduino-1.8.13/hardware/arduino/avr/cores/arduino/Arduino.h"
+            ],
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++14"
+        }
+    ],
+    "version": 4
+}
