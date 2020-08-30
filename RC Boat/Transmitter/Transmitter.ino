@@ -35,8 +35,7 @@ struct MyData {
 
 MyData data;
 
-void resetData() 
-{
+void resetData() {
  
   data.throttle = 0;
   data.yaw = 127;
@@ -47,8 +46,7 @@ void resetData()
   data.state=false;
 }
 
-void setup()
-{
+void setup(){
   
   radio.begin();
   Wire.begin();
@@ -96,8 +94,7 @@ void setup()
 
 
 
-void loop()
-{ 
+void loop(){ 
  
  float value = analogRead(voltage);
  float vo  = value /1023*5;

@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:nano",
+    "configuration": "cpu=atmega328old",
+    "sketch": "Transmitter/Transmitter.ino",
+    "port": "/dev/ttyS0"
+}
