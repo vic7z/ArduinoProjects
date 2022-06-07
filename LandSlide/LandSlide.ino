@@ -10,7 +10,7 @@ long duration, distance, FIRSTSensor,SECONDSensor,sumDistance;
 
 
 int _timeout;
-String number = "+919745611082"; 
+String number = "+91XXXXXX"; 
 
 void setup() {
 
