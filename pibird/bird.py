@@ -6,11 +6,11 @@ import RPi.GPIO as GPIO
 from PIL import Image
 from tflite_runtime.interpreter import Interpreter
 
-OUT_PIN=17
+OUT_PIN=17 #out put pin for gpio speaker
 
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(OUT_PIN,GPIO.OUT)
+GPIO.setmode(GPIO.BCM)     #set gpio mode to BCM
+GPIO.setup(OUT_PIN,GPIO.OUT) #set the gpio pin as output
 
 # init Raspberry Pi Camera
 camera = picamera.PiCamera()
@@ -27,7 +27,6 @@ prob_threshold = 0.4
 
 
 def main():
-
     check_for_bird()
 
 
@@ -40,7 +39,7 @@ def check_for_bird():
     interpreter.allocate_tensors()
     _, height, width, _ = interpreter.get_input_details()[0]['shape']
 
-    camera.start_preview()
+    camera.start_preview()  #camera preview
     time.sleep(2)  # give the camera 2 seconds to adjust light balance
     camera.capture(path_to_image)
     image = Image.open(path_to_image)
