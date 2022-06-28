@@ -7,7 +7,7 @@
 SoftwareSerial SIM900(7, 8); 
 long duration, distance, Sensor;
 
-String number = "+919074960891"; 
+String number = "+91XXXXXXXXX"; 
 String msg="";
 
 void setup() {
