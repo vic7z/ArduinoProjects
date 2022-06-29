@@ -7,13 +7,13 @@
 SoftwareSerial SIM900(7, 8); 
 long duration, distance, Sensor;
 
-String number = "+91XXXXXXXXX"; 
+String number = "+919744640750"; 
 String msg="";
 
 void setup() {
   Serial.begin(9600);
   SIM900.begin(19200);
-  delay(10000);   
+  delay(5000);   
   pinMode(trigPin1, OUTPUT);
   pinMode(echoPin1, INPUT);
   pinMode(floatSensor,INPUT);
@@ -26,18 +26,28 @@ void loop() {
   SonarSensor(trigPin1, echoPin1);
   Sensor = distance;
   Serial.println (Sensor);
+  
   if(Sensor>25){
-    sendSMS("LOW RISk");
-    Serial.println ("LOW RISk");
+    
     callNumber();
-  }else if(Sensor>=15 and Sensor<20){
-     sendSMS("Moderate RISk");
+    Serial.println ("LOW RISk");
+    msg="Flood Detected: LOW RISK";
+    sendSMS("LOW RISk");
+    
+  }else if(Sensor>10 and Sensor<20){
+     
+     callNumber();
      Serial.println ("Moderate RISk");
+     msg="Flood Detected: Moderate RISK";
+     sendSMS("Moderate RISk");
+    
+  }else if(Sensor<=10){
+    
      callNumber();
-  }else if(Sensor<10){
+     Serial.println ("high RISk");
+     msg="Flood Detected: High RISK";
      sendSMS("High RISk");
-     Serial.println (Sensor);
-     callNumber();
+    
   }
   }
 
@@ -62,7 +72,7 @@ void sendSMS(String msf) {
   SIM900.println((char)26); 
   delay(100);
   SIM900.println();
-  delay(5000); 
+  delay(3000); 
 }
 
 
@@ -77,11 +87,12 @@ void callNumber() {
 
 void SonarSensor(int trigPin,int echoPin)
 {
-digitalWrite(trigPin, LOW);
-delayMicroseconds(2);
-digitalWrite(trigPin, HIGH);
-delayMicroseconds(10);
-digitalWrite(trigPin, LOW);
-duration = pulseIn(echoPin, HIGH);
-distance = (duration/2) / 29.1;
+  
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration/2) / 29.1;
 }
