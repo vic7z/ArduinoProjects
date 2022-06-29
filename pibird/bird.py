@@ -54,8 +54,10 @@ def check_for_bird():
         bird = bird[bird.find(",") + 1:]
         prob_pct = str(round(prob * 100, 1)) + "%"
         print(bird);
-        time.sleep(3)        
         GPIO.output(OUT_PIN,GPIO.HIGH);
+        time.sleep(3)  
+        GPIO.output(OUT_PIN,GPIO.LOW);
+
 
 
 def load_labels():
