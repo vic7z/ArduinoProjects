@@ -6,11 +6,11 @@
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
 
-char auth[] = "uF_4-NDCp4nN4YjuoSPCenDWHAMuon6-";
+char auth[] = "";
 
 
-char ssid[] = "potassium";
-char pass[] = "okgoogle";
+char ssid[] = "";
+char pass[] = "";
 float moisture;
 int sensor;
 
