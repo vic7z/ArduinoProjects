@@ -80,7 +80,6 @@ void setup()
   oled.setFont(System5x7);
   oled.clear();
   oled.set1X();
-  calibrateJoysticks();
   pinMode(j1x, INPUT);
   pinMode(voltage, INPUT);
   pinMode(j2x, INPUT);
@@ -93,7 +92,8 @@ void setup()
   oled.println("");
   oled.println("@vic7z");
 
-  delay(2000);
+  delay(1000);
+  calibrateJoysticks();
 
   resetData();
   oled.clear();
@@ -121,7 +121,7 @@ void calibrateJoysticks()
   offsetYaw = map(initialYaw, 0, 1023, 0, 255) - 127;
   offsetPitch = map(initialPitch, 0, 1023, 0, 255) - 127;
   offsetRoll = map(initialRoll, 0, 1023, 0, 255) - 127;
-  delay(1000);
+  delay(500);
   oled.clear();
   oled.println("Offset values set");
   oled.println(" ");
