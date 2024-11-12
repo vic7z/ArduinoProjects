@@ -83,7 +83,7 @@ void recvData()
     while (radio.available())
     {
         radio.read(&data, sizeof(txData));
-        rxData.rxVoltage = analogRead(voltage) * (5 / 1023.0);
+        rxData.rxVoltage = (analogRead(voltage) * 5.0 / 1023.0)*2;
         radio.writeAckPayload(1, &rxData, sizeof(rxData));
         lastRecvTime = millis();
     }

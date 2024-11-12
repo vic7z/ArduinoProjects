@@ -141,7 +141,7 @@ void calibrateJoysticks()
 void loop()
 {
   float value = analogRead(voltage);
-  float vo = value * (3.3 / 1023.0);
+  float vo = (value * 3.3 / 1023.0)*2;
 
   data.throttle = constrain(map(analogRead(j1x), 0, 1023, 0, 255) - offsetThrottle, 0, 255);
   data.yaw = constrain(map(analogRead(j1y), 0, 1023, 0, 255) - offsetYaw, 0, 255);
@@ -202,17 +202,18 @@ void loop()
   oled.print(data.AUX2);
 
   oled.println();
-  oled.print("TX status:");
+  oled.print("Radio status:");
   oled.print(status);
   oled.println();
-  oled.print("voltage  :");
+  oled.print("TX voltage  :");
   oled.print(vo);
   oled.print("v");
   oled.println();
-  oled.print("throttle :");
-  oled.print(per);
-  oled.print(" ");
-  oled.println("%");
+  oled.print("RX voltage  :");
+  oled.print(rxData.rxVoltage);
+  oled.print("v");
+  oled.println();
+
   oled.print("motor :");
   oled.println(state);
   Serial.println(rxData.rxVoltage);
