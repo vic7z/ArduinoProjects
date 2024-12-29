@@ -42,9 +42,9 @@ struct txData
   bool state;
 };
 
-struct rxTelemetry
-{
-  byte rxVoltage;
+struct rxTelemetry {
+  float rxVoltage;
+  float temp;
 };
 
 txData data;
@@ -105,7 +105,7 @@ void setup()
   col[0] = oled.fieldWidth(strlen("ADC0: "));
   col[1] = oled.fieldWidth(strlen("ADC0: 9999 ADC1: "));
   rows = oled.fontRows();
-  delay(3000);
+  delay(500);
 }
 
 void calibrateJoysticks()
@@ -134,7 +134,7 @@ void calibrateJoysticks()
   oled.println(offsetPitch);
   oled.print("roll :");
   oled.println(offsetRoll);
-  delay(3000);
+  delay(2000);
   oled.clear();
 }
 
@@ -164,8 +164,8 @@ void loop()
     data.state = false;
   }
 
-  status = radio.write(&data, sizeof(txData)) ? "ok" : "failed";
-  if (status == "ok")
+  status = radio.write(&data, sizeof(txData)) ? "online " : "offline";
+  if (status == "online ")
   {
     if (radio.isAckPayloadAvailable())
     {
@@ -214,7 +214,13 @@ void loop()
   oled.print("v");
   oled.println();
 
-  oled.print("motor :");
-  oled.println(state);
-  Serial.println(rxData.rxVoltage);
+  oled.print("Driver temp :");
+  oled.println(rxData.temp);
+
+  Serial.print(" Rx voltage  ");
+  Serial.print(rxData.rxVoltage);
+  Serial.print(" Driver temp  ");
+  Serial.print(rxData.temp);
+  Serial.print("\n");
+
 }
