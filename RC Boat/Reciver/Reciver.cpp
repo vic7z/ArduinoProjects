@@ -95,16 +95,23 @@ void recvData() {
 unsigned long previousMillis = 0; 
 
 void loop() {
-   unsigned long currentMillis = millis();
+  unsigned long currentMillis = millis();
 
   if (currentMillis - previousMillis >= 2000) {
-    previousMillis = currentMillis; 
+    previousMillis = currentMillis;
 
     ahtValue = aht20.getTemperature();
   }
- 
+
 
   recvData();
+  unsigned long now = millis();
+  if (now - lastRecvTime > 1000) {
+    resetData();
+    radiocheck = false;
+  } else {
+    radiocheck = true;
+  }
 
   int rollValue = map(data.roll, 0, 255, -127, 127) + 1;
   leftMotorSpeed = constrain(data.throttle + rollValue, 0, 255);
