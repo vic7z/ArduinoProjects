@@ -1,2 +1,18 @@
 # ArduinoProjects
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7efdb357a598483bb8164670b1a30f9e)](https://app.codacy.com/manual/Victorgpz/ArduinoProjects?utm_source=github.com&utm_medium=referral&utm_content=Victorgpz/ArduinoProjects&utm_campaign=Badge_Grade_Dashboard)
+
+## Arduino RC boat
+
+1. TX set up
+   Code for the transmitter can be found under [/RC Boat/Transmitter](https://github.com/vic7z/ArduinoProjects/tree/master/RC%20Boat/Transmitter)
+
+   ### Wiring
+   
+   | Arduino Pro Mini  | Nrf24L01  | SSD1306 |
+   | ------------- | ------------- | ------------- |
+   |11   | MOSI  | |
+   |12   | MISO  | |
+   |13   | SCK  | |
+   |7   | CE  | |
+   |8   | CSN  | |
+   |A4   |   | SDA |
+   |A5  |   | SCL |
