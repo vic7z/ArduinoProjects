@@ -28,7 +28,7 @@ Note : if using Arduino pro mini make sure to buy a USB to URAT converter like F
    
 
    ### Wiring
-   So bad at creating wrining diagram so this :(
+   So bad at creating wirining diagram so this :(
    
    | Arduino Pro Mini  | Nrf24L01  | SSD1306 | Right JoyStick | left Joystick
    | ------------- | ------------- | ------------- | ------------- |------------- |
