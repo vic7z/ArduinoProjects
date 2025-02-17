@@ -150,8 +150,7 @@ void loop()
   data.roll = constrain(map(analogRead(j2y), 0, 1023, 0, 255) - offsetRoll, 0, 255);
   data.AUX1 = digitalRead(j1b);
   data.AUX2 = digitalRead(j2b);
-  data.AUX1 = digitalRead(j1b);
-  data.AUX2 = digitalRead(j2b);
+
 
   if (data.throttle == 255 && data.pitch == 255)
   {
