@@ -1,6 +1,14 @@
 # ArduinoProjects
 
 ## Arduino RC boat
+Easy to make cheap RC boat and a 6 channel RC transmitter with Small OLED that can display realtime telemetry Data such as boats power , current draw, motor Driver temperature and batter voltage
+
+
+![image](https://github.com/user-attachments/assets/2c324700-b937-4a87-bab6-96020da7f90f)
+![image](https://github.com/user-attachments/assets/727c7a76-f8b4-46b2-9188-518be0cb5f2e)
+![image](https://github.com/user-attachments/assets/1cd235c6-99f4-4f70-9f02-b489cb316cc2)
+
+
 
 1. TX set up
 
