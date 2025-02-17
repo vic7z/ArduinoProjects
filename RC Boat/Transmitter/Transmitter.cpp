@@ -44,6 +44,8 @@ struct txData
 
 struct rxTelemetry {
   float rxVoltage;
+  float current;
+  float power;
   float temp;
 };
 
@@ -100,7 +102,6 @@ void setup()
 
   oled.println("throt: 255 yaw : 255");
   oled.println("pitch: 255 roll: 255");
-  oled.println("Aux 1: 255 Aux2: 255");
 
   col[0] = oled.fieldWidth(strlen("ADC0: "));
   col[1] = oled.fieldWidth(strlen("ADC0: 9999 ADC1: "));
@@ -193,34 +194,44 @@ void loop()
   oled.clearField(col[3 % 2], rows * (3 / 2), 4);
   oled.print(data.roll);
 
-  oled.println();
+  // oled.println();
 
-  oled.clearField(col[4 % 2], rows * (4 / 2), 4);
-  oled.print(data.AUX1);
+  // oled.clearField(col[4 % 2], rows * (4 / 2), 4);
+  // oled.print(data.AUX1);
 
-  oled.clearField(col[5 % 2], rows * (5 / 2), 4);
-  oled.print(data.AUX2);
+  // oled.clearField(col[5 % 2], rows * (5 / 2), 4);
+  // oled.print(data.AUX2);
 
   oled.println();
   oled.print("Radio status:");
   oled.print(status);
   oled.println();
-  oled.print("TX voltage  :");
+  oled.print("TX v:");
   oled.print(vo);
   oled.print("v");
-  oled.println();
-  oled.print("RX voltage  :");
+  oled.print(" RX v:");
   oled.print(rxData.rxVoltage);
   oled.print("v");
   oled.println();
-
   oled.print("Driver temp :");
   oled.println(rxData.temp);
+  oled.print("Current Draw:");
+  oled.print(rxData.current);
+  oled.print("mA  ");
+  oled.println();
+  oled.print("Power: ");
+  oled.print(rxData.power/1000);
+  oled.print(" W");
+
 
   Serial.print(" Rx voltage  ");
   Serial.print(rxData.rxVoltage);
   Serial.print(" Driver temp  ");
   Serial.print(rxData.temp);
+  Serial.print(" current ");
+  Serial.print(rxData.current);  
+  Serial.print(" power ");
+  Serial.print(rxData.power);
   Serial.print("\n");
 
 }

@@ -1,12 +1,13 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-#include <Servo.h>
 #include <Arduino.h>
 #include <Wire.h>
 #include <AHT20.h>
+#include <Adafruit_INA219.h>
 
 AHT20 aht20;
+Adafruit_INA219 ina219;
 
 float ahtValue = -1;
 
@@ -32,6 +33,12 @@ int enr = 6;
 
 int voltage = A7;
 
+float shuntvoltage = 0;
+float busvoltage = 0;
+float current_mA = 0;
+float loadvoltage = 0;
+float power_mW = 0;
+
 struct txData {
   byte throttle;
   byte yaw;
@@ -44,6 +51,8 @@ struct txData {
 
 struct rxTelemetry {
   float rxVoltage;
+  float current;
+  float power;
   float temp;
 };
 
@@ -66,6 +75,7 @@ void setup() {
   Serial.begin(9600);
   Wire.begin();
   aht20.begin();
+  ina219.begin();
   resetData();
   radio.begin();
   radio.setDataRate(RF24_250KBPS);
@@ -86,21 +96,27 @@ unsigned long lastRecvTime = 0;
 void recvData() {
   while (radio.available()) {
     radio.read(&data, sizeof(txData));
-    rxData.rxVoltage = (analogRead(voltage) * 5.0 / 1023.0) * 2;
+    rxData.rxVoltage = busvoltage;
+    rxData.current = current_mA;
+    rxData.power = power_mW;
     rxData.temp = ahtValue;
     radio.writeAckPayload(1, &rxData, sizeof(rxData));
     lastRecvTime = millis();
   }
 }
-unsigned long previousMillis = 0; 
+unsigned long previousMillis = 0;
 
 void loop() {
   unsigned long currentMillis = millis();
 
   if (currentMillis - previousMillis >= 2000) {
     previousMillis = currentMillis;
-
     ahtValue = aht20.getTemperature();
+    shuntvoltage = ina219.getShuntVoltage_mV();
+    busvoltage = ina219.getBusVoltage_V();
+    current_mA = ina219.getCurrent_mA();
+    power_mW = ina219.getPower_mW();
+    loadvoltage = busvoltage + (shuntvoltage / 1000);
   }
 
 
@@ -118,39 +134,16 @@ void loop() {
   rightMotorSpeed = constrain(data.throttle - rollValue, 0, 255);
 
   if (data.state) {
-    // if (rollValue > 0)
-    // {
-    //     digitalWrite(leftmotor1, LOW);
-    //     digitalWrite(leftmotor2, HIGH);
 
-    //     digitalWrite(rightmotor2, LOW);
-    //     digitalWrite(rightmotor1, HIGH);
+    digitalWrite(leftmotor1, HIGH);
+    digitalWrite(leftmotor2, LOW);
 
-    //     analogWrite(enl, leftMotorSpeed);
-    //     analogWrite(enr, rightMotorSpeed);
-    // }
-    // else if (rollValue < 0)
-    // {
-    //     digitalWrite(leftmotor1, HIGH);
-    //     digitalWrite(leftmotor2, LOW);
+    digitalWrite(rightmotor1, HIGH);
+    digitalWrite(rightmotor2, LOW);
 
-    //     digitalWrite(rightmotor2, HIGH);
-    //     digitalWrite(rightmotor1, LOW);
+    analogWrite(enl, leftMotorSpeed);
+    analogWrite(enr, rightMotorSpeed);
 
-    //     analogWrite(enl, leftMotorSpeed);
-    //     analogWrite(enr, rightMotorSpeed);
-    // }
-    // else
-    {
-      digitalWrite(leftmotor1, HIGH);
-      digitalWrite(leftmotor2, LOW);
-
-      digitalWrite(rightmotor1, HIGH);
-      digitalWrite(rightmotor2, LOW);
-
-      analogWrite(enl, leftMotorSpeed);
-      analogWrite(enr, rightMotorSpeed);
-    }
   } else {
     digitalWrite(leftmotor1, LOW);
     digitalWrite(leftmotor2, LOW);
@@ -171,5 +164,10 @@ void loop() {
   Serial.print("   temp ");
   Serial.print(rxData.temp);
   Serial.print("\n");
-
+  // Serial.print("Bus Voltage:   "); Serial.print(busvoltage); Serial.print(" V");
+  // Serial.print(" Shunt Voltage: "); Serial.print(shuntvoltage); Serial.print(" mV");
+  // Serial.print(" Load Voltage:  "); Serial.print(rxData.rxVoltage); Serial.print(" V");
+  // Serial.print(" Current:       "); Serial.print(current_mA); Serial.print(" mA");
+  // Serial.print(" Power:         "); Serial.print(power_mW); Serial.print(" mW");
+  // Serial.println("");
 }
